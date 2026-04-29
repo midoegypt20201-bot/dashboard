@@ -1,0 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Noto+Sans+Arabic:wght@300;400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Noto Sans Arabic", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Outfit", sans-serif;
+  
+  --color-primary: #01a79d;
+  --color-primary-dark: #018e86;
+  --color-primary-light: #e6f6f5;
+  --color-secondary: #8cc342;
+  --color-secondary-dark: #7ab135;
+  --color-accent: #606161;
+  
+  --shadow-premium: 0 10px 40px -10px rgba(0, 167, 157, 0.1);
+  --shadow-hover: 0 20px 50px -12px rgba(0, 0, 0, 0.08);
+}
+
+@layer base {
+  body {
+    @apply bg-[#f8fbfa] text-slate-900 antialiased selection:bg-primary/20 selection:text-primary;
+  }
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
