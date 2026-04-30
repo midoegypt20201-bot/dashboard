@@ -93,7 +93,7 @@ export default function SummaryTab({ getStatus, getStatusText }: SummaryTabProps
       datalabels: {
         anchor: 'end' as const,
         align: 'top' as const,
-        formatter: (v: number) => v.toFixed(1) + '%',
+        formatter: (v: number) => v.toFixed(2) + '%',
         font: { family: 'Outfit', weight: '800' as const, size: 12 },
         color: '#334155'
       }
@@ -170,7 +170,7 @@ export default function SummaryTab({ getStatus, getStatusText }: SummaryTabProps
                   status === 'good' ? 'text-amber-500' : 
                   status === 'low' ? 'text-red-500' : 'text-cyan-600'
                 }`}>
-                  {val.toFixed(1)}%
+                  {val.toFixed(2)}%
                 </span>
                 <div className={`absolute -bottom-1 -right-1 w-full h-4 opacity-10 rounded-full blur-md ${
                   status === 'excellent' ? 'bg-secondary' : 
@@ -258,7 +258,7 @@ export default function SummaryTab({ getStatus, getStatusText }: SummaryTabProps
                           {val === 0 && year === '2026' ? (
                             <span className="text-slate-300">-</span>
                           ) : (
-                            `${val.toFixed(1)}%`
+                            `${val.toFixed(2)}%`
                           )}
                         </td>
                       );

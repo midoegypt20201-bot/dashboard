@@ -211,7 +211,7 @@ export default function PerformanceCategoryTab({ status, getStatus }: Performanc
                                     </div>
                                     <div className="bg-slate-50/50 p-2 rounded-xl text-center border border-slate-100/30 text-xs font-black text-slate-500">
                                       <span className="block text-[8px] opacity-60 mb-0.5">المحقق</span>
-                                      {kpi.a}
+                                      {kpi.t.includes('%') && !String(kpi.a).includes('%') && kpi.a !== '-' ? `${kpi.a}%` : kpi.a}
                                     </div>
                                   </div>
                                 </div>

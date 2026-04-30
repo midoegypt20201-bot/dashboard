@@ -6,7 +6,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ChevronDown } from 'lucide-react';
-import { rawData, pillarData } from '../constants';
+import { rawData, pillarData, PILLAR_ORDER } from '../constants';
 
 interface YearTabProps {
   year: string;
@@ -18,10 +18,10 @@ export default function YearTab({ year, getStatus }: YearTabProps) {
   const [openGoals, setOpenGoals] = useState<Record<string, boolean>>({});
 
   const annualPerformance: Record<string, string> = {
-    '2023': '75.4%',
-    '2024': '91.1%',
-    '2025': '86.9%',
-    '2026': '90.1%'
+    '2023': '75.40%',
+    '2024': '91.12%',
+    '2025': '86.93%',
+    '2026': '90.12%'
   };
 
   const togglePillar = (p: string) => {
@@ -58,12 +58,7 @@ export default function YearTab({ year, getStatus }: YearTabProps) {
         <div className="absolute top-[-20%] right-[-10%] w-64 h-64 bg-primary/5 rounded-full blur-3xl"></div>
       </motion.div>
 
-      {Object.keys(pillarData)
-        .sort((a, b) => {
-          const perfA = (pillarData as any)[a][year];
-          const perfB = (pillarData as any)[b][year];
-          return perfB - perfA;
-        })
+      {PILLAR_ORDER
         .map((p, i) => {
         const pPerf = (pillarData as any)[p][year];
         const pStatus = getStatus(pPerf, year);
@@ -158,7 +153,7 @@ export default function YearTab({ year, getStatus }: YearTabProps) {
                                 <span className="font-black text-lg text-slate-700 leading-tight group-hover/goal:text-primary transition-colors">
                                   {g.name}
                                   {gStatus === 'upcoming' && (
-                                    <span className="text-cyan-600 mr-2 text-sm font-bold bg-cyan-50 px-2 py-0.5 rounded-lg"> - لم يحن استحقاقه</span>
+                                    <span className="text-cyan-600 mr-2 text-sm font-bold bg-cyan-50 px-2 py-0.5 rounded-lg"> - {year === '2026' ? 'لم يحن دورية قياسه' : 'لم يحن استحقاقه'}</span>
                                   )}
                                 </span>
                               </div>
@@ -201,7 +196,7 @@ export default function YearTab({ year, getStatus }: YearTabProps) {
                                             <tr key={ki} className="hover:bg-slate-50/50 transition-colors">
                                               <td className="p-4 text-right pr-6 text-slate-700 font-bold text-base leading-relaxed">{k.n}</td>
                                               <td className="p-4 text-center font-display font-bold text-lg text-slate-500">{k.t}</td>
-                                              <td className="p-4 text-center font-display font-bold text-lg text-slate-500">{k.a}</td>
+                                              <td className="p-4 text-center font-display font-bold text-lg text-slate-500">{k.t.includes('%') && !String(k.a).includes('%') && k.a !== '-' ? `${k.a}%` : k.a}</td>
                                               <td className={`p-4 text-center font-display font-black text-xl pl-6 ${
                                                 getStatus(k.p, year) === 'excellent' ? 'text-secondary' : 
                                                 getStatus(k.p, year) === 'good' ? 'text-amber-500' : 'text-red-500'

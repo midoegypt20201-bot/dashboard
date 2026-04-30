@@ -5,13 +5,13 @@
 
 import { useState } from 'react';
 import { motion } from 'motion/react';
-import { overallProgressData, rawData } from '../constants';
+import { overallProgressData, rawData, PILLAR_ORDER } from '../constants';
 
 interface OverallProgressTabProps {
   getStatus: (val: number, year: string) => 'excellent' | 'good' | 'low' | 'upcoming';
 }
 
-const PILLARS = ['الكل', 'بعد المستفيدين', 'بعد أصحاب المصلحة', 'البعد المالي', 'بعد العمليات الداخلية', 'بعد التعلم والنمو'];
+const PILLARS_WITH_ALL = ['الكل', ...PILLAR_ORDER];
 
 export default function OverallProgressTab({ getStatus }: OverallProgressTabProps) {
   const [filter, setFilter] = useState('الكل');
@@ -26,7 +26,7 @@ export default function OverallProgressTab({ getStatus }: OverallProgressTabProp
         <h2 className="text-slate-800 text-3xl font-black mb-8 relative z-10">مستوى تقدم الأهداف الاستراتيجية (2023-2026)</h2>
         
         <div className="flex flex-wrap gap-3 justify-center relative z-10">
-          {PILLARS.map(p => (
+          {PILLARS_WITH_ALL.map(p => (
             <button 
               key={p}
               onClick={() => setFilter(p)}
@@ -94,6 +94,7 @@ export default function OverallProgressTab({ getStatus }: OverallProgressTabProp
                 <div className="grid grid-cols-4 gap-3 pt-2">
                   {years.map(year => {
                     const yearData = goalDetails ? (goalDetails.years as any)[year] : null;
+                    const hasData = !!yearData;
                     const val = yearData ? yearData.p : 0;
                     const yStatus = getStatus(val, year);
                     
@@ -105,7 +106,7 @@ export default function OverallProgressTab({ getStatus }: OverallProgressTabProp
                           yStatus === 'good' ? 'text-amber-500' : 
                           yStatus === 'upcoming' ? 'text-cyan-600' : 'text-red-500'
                         }`}>
-                          {yStatus === 'upcoming' ? '-' : `${val.toFixed(0)}%`}
+                          {!hasData || yStatus === 'upcoming' ? '-' : `${val.toFixed(2)}%`}
                         </span>
                       </div>
                     );

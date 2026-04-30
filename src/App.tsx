@@ -4,14 +4,13 @@
  */
 
 import { useState, useMemo } from 'react';
-import { Search } from 'lucide-react';
+import { Search, ChevronDown } from 'lucide-react';
 import SummaryTab from './components/SummaryTab';
 import OverallProgressTab from './components/OverallProgressTab';
 import YearTab from './components/YearTab';
 import PerformanceCategoryTab from './components/PerformanceCategoryTab';
 import { rawData } from './constants';
 import { motion, AnimatePresence } from 'motion/react';
-import { Search, ChevronDown } from 'lucide-react';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('summary');
