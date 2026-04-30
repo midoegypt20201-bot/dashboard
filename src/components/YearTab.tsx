@@ -17,6 +17,13 @@ export default function YearTab({ year, getStatus }: YearTabProps) {
   const [openPillars, setOpenPillars] = useState<Record<string, boolean>>({});
   const [openGoals, setOpenGoals] = useState<Record<string, boolean>>({});
 
+  const annualPerformance: Record<string, string> = {
+    '2023': '75.4%',
+    '2024': '91.1%',
+    '2025': '86.9%',
+    '2026': '90.1%'
+  };
+
   const togglePillar = (p: string) => {
     setOpenPillars(prev => ({ ...prev, [p]: !prev[p] }));
   };
@@ -27,7 +34,37 @@ export default function YearTab({ year, getStatus }: YearTabProps) {
 
   return (
     <div className="space-y-8">
-      {Object.keys(pillarData).map((p, i) => {
+      {/* Annual Summary Header */}
+      <motion.div 
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-white p-10 rounded-[50px] shadow-premium border border-slate-100 flex flex-col md:flex-row items-center justify-between gap-8 mb-12 relative overflow-hidden"
+      >
+        <div className="relative z-10">
+          <h2 className="text-slate-800 text-3xl font-black mb-2">أداء عام {year} {year === '2026' ? '(الربع الأول)' : ''}</h2>
+          <p className="text-slate-500 font-medium">مستوى الإنجاز لجميع الأبعاد والمؤشرات الاستراتيجية</p>
+        </div>
+        <div className="flex items-center gap-6 relative z-10">
+          <div className="flex flex-col items-end">
+            <span className={`text-6xl font-display font-black leading-none ${
+              parseFloat(annualPerformance[year]) >= 90 ? 'text-secondary' : 
+              parseFloat(annualPerformance[year]) >= 70 ? 'text-amber-500' : 'text-red-500'
+            }`}>
+              {annualPerformance[year]}
+            </span>
+            <span className="text-[11px] text-slate-400 font-black uppercase tracking-widest mt-2">نسبة الإنجاز المحققة</span>
+          </div>
+        </div>
+        <div className="absolute top-[-20%] right-[-10%] w-64 h-64 bg-primary/5 rounded-full blur-3xl"></div>
+      </motion.div>
+
+      {Object.keys(pillarData)
+        .sort((a, b) => {
+          const perfA = (pillarData as any)[a][year];
+          const perfB = (pillarData as any)[b][year];
+          return perfB - perfA;
+        })
+        .map((p, i) => {
         const pPerf = (pillarData as any)[p][year];
         const pStatus = getStatus(pPerf, year);
 
@@ -86,6 +123,7 @@ export default function YearTab({ year, getStatus }: YearTabProps) {
                 </div>
               </div>
             </button>
+
 
             <AnimatePresence>
               {isPillarOpen && (

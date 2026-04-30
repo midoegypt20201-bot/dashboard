@@ -225,6 +225,7 @@ export default function SummaryTab({ getStatus, getStatusText }: SummaryTabProps
         </motion.div>
       </div>
 
+
       <div className="space-y-8">
         <div className="flex items-center justify-between px-4">
           <h3 className="text-slate-900 text-3xl font-black">تفصيل الأداء لكل بعد استراتيجي</h3>

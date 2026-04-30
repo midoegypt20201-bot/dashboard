@@ -243,7 +243,6 @@ export default function App() {
               <AnimatePresence>
                 {isCategoryMenuOpen && (
                   <>
-                    {/* Backdrop to close on mobile/click outside */}
                     <div className="fixed inset-0 z-40" onClick={() => setIsCategoryMenuOpen(false)}></div>
                     <motion.div
                       initial={{ opacity: 0, y: 10, scale: 0.95 }}
@@ -292,6 +291,7 @@ export default function App() {
             <Search className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors w-7 h-7" />
           </div>
         </div>
+
 
         <motion.div
            layout
