@@ -8,14 +8,16 @@ import { Search } from 'lucide-react';
 import SummaryTab from './components/SummaryTab';
 import OverallProgressTab from './components/OverallProgressTab';
 import YearTab from './components/YearTab';
-import CategoryTab from './components/CategoryTab';
+import PerformanceCategoryTab from './components/PerformanceCategoryTab';
 import { rawData } from './constants';
 import { motion, AnimatePresence } from 'motion/react';
+import { Search, ChevronDown } from 'lucide-react';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('summary');
   const [currentYear, setCurrentYear] = useState('2024');
   const [searchQuery, setSearchQuery] = useState('');
+  const [isCategoryMenuOpen, setIsCategoryMenuOpen] = useState(false);
 
   const getStatus = (val: number, year: string) => {
     const cappedVal = Math.min(val, 100);
@@ -137,9 +139,9 @@ export default function App() {
       case '2024': 
       case '2025': 
       case '2026': return <YearTab year={activeTab} getStatus={getStatus} />;
-      case 'cat-excellent': return <CategoryTab status="excellent" currentYear={currentYear} setYear={setCurrentYear} getStatus={getStatus} />;
-      case 'cat-good': return <CategoryTab status="good" currentYear={currentYear} setYear={setCurrentYear} getStatus={getStatus} />;
-      case 'cat-low': return <CategoryTab status="low" currentYear={currentYear} setYear={setCurrentYear} getStatus={getStatus} />;
+      case 'cat-excellent': return <PerformanceCategoryTab status="excellent" getStatus={getStatus} />;
+      case 'cat-good': return <PerformanceCategoryTab status="good" getStatus={getStatus} />;
+      case 'cat-low': return <PerformanceCategoryTab status="low" getStatus={getStatus} />;
       default: return <SummaryTab getStatus={getStatus} getStatusText={getStatusText} />;
     }
   };
@@ -151,6 +153,9 @@ export default function App() {
     { id: '2024', label: '2024' },
     { id: '2025', label: '2025' },
     { id: '2026', label: '2026' },
+  ];
+
+  const categoryItems = [
     { id: 'cat-excellent', label: 'الأهداف ذات الأداء الممتاز', color: 'text-secondary' },
     { id: 'cat-good', label: 'الأهداف ذات الأداء الجيد', color: 'text-amber-500' },
     { id: 'cat-low', label: 'الأهداف ذات الأداء الضعيف', color: 'text-red-500' },
@@ -199,14 +204,15 @@ export default function App() {
       </header>
 
       <main className="container mx-auto px-6 pb-24 -mt-16 relative z-20">
-        <div className="bg-white/80 backdrop-blur-md p-2 rounded-3xl shadow-xl mb-12 border border-white/50 sticky top-4 z-30 max-w-6xl mx-auto">
-          <div className="flex overflow-x-auto gap-2 p-1 no-scrollbar items-center">
+        <div className="bg-white/80 backdrop-blur-md p-2 rounded-3xl shadow-xl mb-12 border border-white/50 sticky top-4 z-40 max-w-6xl mx-auto">
+          <div className="flex overflow-x-visible gap-2 p-1 no-scrollbar items-center justify-center md:justify-start">
             {navItems.map((item) => (
               <button
                 key={item.id}
                 onClick={() => {
                   setActiveTab(item.id);
                   setSearchQuery('');
+                  setIsCategoryMenuOpen(false);
                   if (['2023', '2024', '2025', '2026'].includes(item.id)) {
                     setCurrentYear(item.id);
                   }
@@ -214,12 +220,62 @@ export default function App() {
                 className={`flex-shrink-0 px-6 py-3.5 rounded-2xl font-bold text-sm transition-all duration-300 relative group truncate ${
                   activeTab === item.id && !searchQuery
                     ? 'bg-primary text-white shadow-lg shadow-primary/20 scale-[1.02]'
-                    : `bg-transparent text-slate-500 hover:bg-slate-100 hover:text-slate-800 ${item.color || ''}`
+                    : `bg-transparent text-slate-500 hover:bg-slate-100 hover:text-slate-800`
                 }`}
               >
                 {item.label}
               </button>
             ))}
+
+            <div className="relative">
+              <button
+                onClick={() => setIsCategoryMenuOpen(!isCategoryMenuOpen)}
+                className={`flex-shrink-0 px-6 py-3.5 rounded-2xl font-bold text-sm transition-all duration-300 relative group flex items-center gap-1 ${
+                  activeTab.startsWith('cat-')
+                    ? 'bg-primary text-white shadow-lg shadow-primary/20 scale-[1.02]'
+                    : `bg-transparent text-slate-500 hover:bg-slate-100 hover:text-slate-800`
+                }`}
+              >
+                تصنيفات الأهداف حسب الأداء
+                <ChevronDown size={14} className={`transition-transform grow-0 ${isCategoryMenuOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+              <AnimatePresence>
+                {isCategoryMenuOpen && (
+                  <>
+                    {/* Backdrop to close on mobile/click outside */}
+                    <div className="fixed inset-0 z-40" onClick={() => setIsCategoryMenuOpen(false)}></div>
+                    <motion.div
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      className="absolute right-0 mt-3 w-72 bg-white rounded-[32px] shadow-[0_20px_50px_rgba(0,0,0,0.15)] p-4 border border-slate-100 z-50 origin-top-right"
+                    >
+                      <div className="space-y-2">
+                        {categoryItems.map((item) => (
+                          <button
+                            key={item.id}
+                            onClick={() => {
+                              setActiveTab(item.id);
+                              setSearchQuery('');
+                              setIsCategoryMenuOpen(false);
+                            }}
+                            className={`w-full text-right px-5 py-4 rounded-2xl transition-all font-black text-sm flex items-center justify-between group ${
+                              activeTab === item.id 
+                                ? 'bg-slate-50 text-primary ring-1 ring-primary/5' 
+                                : 'text-slate-600 hover:bg-slate-50 hover:text-primary'
+                            }`}
+                          >
+                            <span className="flex-1">{item.label}</span>
+                            <div className={`w-3 h-3 rounded-full mr-4 ${item.color.replace('text', 'bg')} shadow-sm group-hover:scale-125 transition-transform`}></div>
+                          </button>
+                        ))}
+                      </div>
+                    </motion.div>
+                  </>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
         </div>
 
